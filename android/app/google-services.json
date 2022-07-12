@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "654498374739",
+    "project_id": "muvi-cdabb",
+    "storage_bucket": "muvi-cdabb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:654498374739:android:81debf42434fc41086d2a6",
+        "android_client_info": {
+          "package_name": "com.muvi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "654498374739-id0eib70m250ina7i7s6hs8472vgip8q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpcTFCCfl7pwLHa8JwRAh4gpmy0MFBAWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "654498374739-id0eib70m250ina7i7s6hs8472vgip8q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
