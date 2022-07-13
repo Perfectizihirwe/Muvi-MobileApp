@@ -16,6 +16,9 @@ import { fetchVideoId } from "../../../redux/actions/video.id.actions";
 import { deleteVideoId } from "../../../redux/actions/video.id.actions";
 import { fetchSerieId } from "../../../redux/actions";
 import { deleteSerieId } from "../../../redux/actions";
+import { fetchVideoRelated } from "../../../redux/actions";
+import { PopularComponent } from "../../../components/popular.movies";
+import { deleteVideoRelated } from "../../../redux/actions";
 
 import { Video } from "../../../components/video.player";
 
@@ -39,12 +42,14 @@ export default function DetailScreen({ route, navigation }) {
   useEffect(() => {
     dispatch(fetchVideoId(id));
     dispatch(fetchSerieId(id));
+    dispatch(fetchVideoRelated(id));
   }, []);
 
   const { video_id, error } = useSelector((state) => state.VideoId);
   const { serie_id } = useSelector((state) => state.SeriesVideo);
+  const { video_related } = useSelector((state) => state.Related);
 
-  console.log(serie_id);
+  console.log(id);
 
   const youtubeSerieKey = serie_id?.filter((serie) =>
     serie.name.includes("Trailer")
@@ -62,6 +67,7 @@ export default function DetailScreen({ route, navigation }) {
   function leaveScreen() {
     dispatch(deleteVideoId());
     dispatch(deleteSerieId());
+    dispatch(deleteVideoRelated());
     navigation.goBack();
   }
 
@@ -95,7 +101,7 @@ export default function DetailScreen({ route, navigation }) {
             width: 150,
             height: 250,
             top: 60,
-            left: 110,
+            left: "30%",
           }}
         />
 
@@ -124,35 +130,34 @@ export default function DetailScreen({ route, navigation }) {
               </View>
             ) : null}
           </View>
-          
-        ) : null }
+        ) : null}
 
         {youtubeSerieKey.length !== 0 ? (
+          <View
+            style={{
+              position: "absolute",
+              top: 15,
+              left: 0,
+              width: "100%",
+              maxHeight: 290,
+            }}
+          >
+            {playing ? (
               <View
                 style={{
                   position: "absolute",
-                  top: 15,
-                  left: 0,
+                  top: 40,
                   width: "100%",
-                  maxHeight: 290,
+                  height: 290,
                 }}
               >
-                {playing ? (
-                  <View
-                    style={{
-                      position: "absolute",
-                      top: 40,
-                      width: "100%",
-                      height: 290,
-                    }}
-                  >
-                    {videoKey.length !==0  ? <Video movie={videoKey["key"]} /> : null}
-                  </View>
+                {videoKey.length !== 0 ? (
+                  <Video movie={videoKey["key"]} />
                 ) : null}
               </View>
             ) : null}
-
-        
+          </View>
+        ) : null}
 
         <Text
           style={{
@@ -161,7 +166,7 @@ export default function DetailScreen({ route, navigation }) {
             fontSize: 20,
             fontWeight: "900",
             textAlign: "center",
-            marginVertical: 20,
+            // marginVertical: 20,
           }}
         >
           {original_title || name}
@@ -232,9 +237,36 @@ export default function DetailScreen({ route, navigation }) {
             </Text>
           </TouchableOpacity>
         </View>
-        <Text style={{ color: "#fff", marginHorizontal: 30, marginBottom: 50 }}>
-          {overview}
+        <Text style={{ color: "#fff", marginHorizontal: 30 }}>{overview}</Text>
+        <Text
+          style={{
+            fontSize: 15,
+            color: "#fff",
+            fontWeight: "bold",
+            marginVertical: 10,
+          }}
+        >
+          Similar Movies
         </Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginVertical: 15 }}
+        >
+          {video_related?.map((related, index) => {
+            return (
+              <PopularComponent
+                key={index}
+                popTitle={related.title}
+                popImage={related.backdrop_path}
+                popDetails={related.overview}
+                navigation={() => {
+                  navigation.push("DetailScreen", related);                  
+                }}
+              />
+            );
+          })}
+        </ScrollView>
       </View>
     </ScrollView>
   );

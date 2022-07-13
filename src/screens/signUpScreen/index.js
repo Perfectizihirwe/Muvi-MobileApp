@@ -6,33 +6,56 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  ToastAndroid,
+  Keyboard,
 } from "react-native";
+import { BarIndicator } from "react-native-indicators";
 import * as icons from "@expo/vector-icons";
 import { ScaledSheet, scale, verticalScale } from "react-native-size-matters";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { auth } from "../../../firebase/index";
-
+import { authLogin } from "../../redux/actions/auth.actions";
+import { keyboardProps } from "react-native-web/dist/cjs/modules/forwardedProps";
 
 export function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [signUpComplete, setSignUpComplete] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const signUpSuccessfulToast = () => {
+    ToastAndroid.showWithGravity(
+      "SignUp successful",
+      ToastAndroid.SHORT,
+      ToastAndroid.BOTTOM
+    );
+  };
+
 
   const handleSignUp = () => {
+
+    setLoading(true);
+    Keyboard.dismiss();
     if (email === "" && password === "" && confirmPassword === "") {
       alert("Fill all fields");
+      setLoading(false);
     } else if (password !== confirmPassword) {
       alert("Passwords don't match");
+      setLoading(false);
     } else {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((userCredentials) => {
+          dispatch(authLogin(email, password))          
           const user = userCredentials.user;
           console.log(user.email);
-          navigation.navigate("Login");
+          navigation.replace("MainNavigation");
+          signUpSuccessfulToast();
         })
         .catch((error) => {
+          setLoading(false);
           alert(error.message);
         });
     }
@@ -50,6 +73,7 @@ export function SignUp({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.topBarText}>Register</Text>
       </View>
+      {/* { loading ? <View><BarIndicator color="#fed130"/></View> : null} */}
       <View style={styles.logoArea}>
         <Image
           style={styles.logoAreaImage}
@@ -102,10 +126,8 @@ export function SignUp({ navigation }) {
           <icons.Feather name="lock" size={scale(20)} color="#fed130" />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={handleSignUp}
-        style={styles.signUpButton1}
-      >
+      { loading ? <View style={{marginTop: 25, marginBottom: 5}}><BarIndicator color="#fed130"/></View> : null}
+      <TouchableOpacity onPress={handleSignUp} style={styles.signUpButton1}>
         <Text>Sign Up</Text>
       </TouchableOpacity>
       <View style={styles.text2}>
@@ -152,9 +174,7 @@ export function SignUp({ navigation }) {
         }}
       >
         <Text style={{ color: "#fff" }}>Already have an account? </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login", { email, password })}
-        >
+        <TouchableOpacity onPress={() => navigation.replace("Login")}>
           <Text style={{ color: "#fed130" }}> Sign in</Text>
         </TouchableOpacity>
       </View>

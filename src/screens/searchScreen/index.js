@@ -16,7 +16,7 @@ import { searchAnything } from "../../redux/actions/search.actions";
 import * as icons from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchComponent } from "../../components/search.results";
-import { ScaledSheet} from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 
 export function SearchScreen(props) {
   const [keyword, setKeyword] = useState("");
@@ -34,7 +34,7 @@ export function SearchScreen(props) {
   if (keyword !== "") {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor={'#202123'} hidden={false} />
+        <StatusBar backgroundColor={"#202123"} hidden={false} />
         <View style={styles.inputarea}>
           <TextInput
             style={styles.input}
@@ -84,7 +84,7 @@ export function SearchScreen(props) {
     );
   } else {
     return (
-        <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor={"#202123"} hidden={false} />
         <View style={styles.inputarea}>
           <TextInput
@@ -117,7 +117,6 @@ export function SearchScreen(props) {
       </SafeAreaView>
     );
   }
-  
 }
 
 const styles = ScaledSheet.create({

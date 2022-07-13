@@ -19,7 +19,7 @@ export function OnBoardScreen({ navigation }) {
           <Text style={styles.introTitle}>{item.title}</Text>
           <Text style={styles.introText}>{item.text}</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Welcome")}
+            onPress={() => navigation.replace("Welcome")}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Get Started</Text>

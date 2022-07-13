@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {HomeScreen} from "../screens/homeScreen";
 import {SearchScreen} from "../screens/searchScreen";
 import {MyListScreen} from "../screens/myListScreen";
-import {MoreScreen} from "../screens/moreScreen";
+import { MoreScreens } from "./more.navigation";
 import * as icons from "@expo/vector-icons"
 
 const Tab = createBottomTabNavigator();
@@ -50,7 +50,7 @@ export function MainNavigation () {
             options={{headerShown : false}}/>
             <Tab.Screen 
             name="More"
-            component={MoreScreen}
+            component={MoreScreens}
             options={{headerShown : false}}/>
         </Tab.Navigator>
     );

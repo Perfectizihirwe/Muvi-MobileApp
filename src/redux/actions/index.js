@@ -6,3 +6,5 @@ export * from "./details.action";
 export * from "./video.id.actions";
 export * from "./search.actions";
 export * from "./video.series.actions";
+export * from "./auth.actions";
+export * from "./related.actions.js";

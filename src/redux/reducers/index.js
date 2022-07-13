@@ -6,6 +6,8 @@ import seriesReducers from "./series.reducers";
 import idReducers from "./video.id.reducers";
 import searchReducers from "./search.reducers";
 import SerieIdReducers from "./video.series.reducers";
+import { authReducers } from "./auth.reducers";
+import relatedReducers from "./related.reducers";
 
 export default combineReducers({
   Trending: fetchTrendingReducers,
@@ -15,4 +17,6 @@ export default combineReducers({
   VideoId: idReducers,
   Search: searchReducers,
   SeriesVideo: SerieIdReducers,
+  Authentication: authReducers,
+  Related: relatedReducers,
 });

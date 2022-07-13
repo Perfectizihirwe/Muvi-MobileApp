@@ -17,19 +17,23 @@ import Background from "../../../assets/images/Wirebackground.jpg";
 import ProfilePicture from "../../../assets/images/profile.jpg";
 import { MoreOptions } from "../../components/more.options";
 import { auth } from "../../../firebase";
+import { authLogout } from "../../redux/actions/auth.actions";
+import { useDispatch } from "react-redux";
 
-export function MoreScreen({navigation}) {
+export function MoreScreen({ navigation }) {
+
+  const dispatch = useDispatch();
 
   const handleSignOut = () => {
     auth
-    .signOut()
-    .then(() => {
-      navigation.replace("Login");
-    })
-    .catch((error) => {
-      alert(error.message)
-    });
-  }
+      .signOut()
+      .then(() => {
+        dispatch(authLogout());
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
 
   const options = [
     {
@@ -37,14 +41,14 @@ export function MoreScreen({navigation}) {
       icon: "user",
       title: "Account Settings",
       showArrow: true,
-      specificAction: null,
+      specificAction: () => navigation.navigate("AccountSettings"),
     },
     {
       key: 2,
       icon: "settings",
       title: "App Settings",
       showArrow: true,
-      specificAction: null,
+      specificAction: () => navigation.navigate("AppSettings"),
     },
     {
       key: 3,
@@ -58,18 +62,16 @@ export function MoreScreen({navigation}) {
       icon: "alert-circle",
       title: "Help",
       showArrow: true,
-      specificAction: null,
+      specificAction: () => navigation.navigate("Help"),
     },
     {
       key: 5,
       icon: "log-out",
       title: "Sign out",
       showArrow: false,
-      specificAction: ()=>handleSignOut(),
+      specificAction: () => handleSignOut(),
     },
   ];
-  
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -109,7 +111,7 @@ export function MoreScreen({navigation}) {
         <View
           style={{
             marginVertical: verticalScale(30),
-            alignSelf: 'center',
+            alignSelf: "center",
           }}
         >
           <Image
@@ -182,6 +184,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#26272b",
   },
 });
-
-
-

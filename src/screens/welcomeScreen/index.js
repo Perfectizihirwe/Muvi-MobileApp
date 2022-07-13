@@ -5,13 +5,45 @@ import {
   Text,
   ImageBackground,
   TouchableOpacity,
+  ActivityIndicator,
+  StatusBar,
 } from "react-native";
+import React , { useEffect, useState } from "react";
 import * as icons from "@expo/vector-icons";
 import { ScaledSheet, scale, verticalScale } from "react-native-size-matters";
+import { useDispatch, useSelector } from 'react-redux';
+import { Init } from "../../redux/actions/auth.actions";
 
-export   function WelcomeScreen({ navigation }) {
+export function WelcomeScreen({ navigation }) {
+
+  const token = useSelector(state => state.Authentication.authToken);
+
+  console.log(token);
+
+  const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch();
+  const init = async () => {
+    await dispatch(Init());
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color={"#fed130"} />
+      </View>
+    )
+  }
+
+
   return (
     <View style={styles.container}>
+      <StatusBar hidden={true} />
       <ImageBackground
         style={styles.container}
         source={require("../../../assets/images/welcome_background.png")}

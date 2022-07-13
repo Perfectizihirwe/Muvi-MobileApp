@@ -5,27 +5,50 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  ToastAndroid,
+  Keyboard,
 } from "react-native";
 import * as icons from "@expo/vector-icons";
 import { ScaledSheet } from "react-native-size-matters";
 import { useEffect, useState } from "react";
 import { auth } from "../../../firebase/index";
-
+import { BarIndicator } from "react-native-indicators";
+import { useDispatch } from "react-redux";
+import { authLogin } from "../../redux/actions/auth.actions";
 
 export function Login({ navigation }) {
   const [email, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const showToastWithGravity = () => {
+    ToastAndroid.showWithGravity(
+      "Login Successful",
+      ToastAndroid.SHORT,
+      ToastAndroid.BOTTOM
+    );
+  };
 
   const handleLogin = () => {
+    setLoading(true);
+    Keyboard.dismiss();
     auth
       .signInWithEmailAndPassword(email, loginPassword)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(`Login of ${user.email} successful`);
-        navigation.replace("MainNavigation");
+        dispatch(authLogin(email, loginPassword));
+        showToastWithGravity();
       })
       .catch((error) => {
-        alert(error.message);
+        setLoading(false);
+        {
+          error.message === "The email address is badly formatted."
+            ? alert("User doesn't exist, sign up")
+            : alert("Wrong Password");
+        }
       });
   };
 
@@ -83,6 +106,11 @@ export function Login({ navigation }) {
           Forgot Password?{" "}
         </Text>
       </TouchableOpacity>
+      {loading ? (
+        <View style={{ marginTop: 25, marginBottom: 5 }}>
+          <BarIndicator color="#fed130" />
+        </View>
+      ) : null}
       <TouchableOpacity
         onPress={() => handleLogin()}
         style={styles.signUpButton1}
@@ -112,7 +140,7 @@ export function Login({ navigation }) {
         }}
       >
         <Text style={{ color: "#fff" }}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+        <TouchableOpacity onPress={() => navigation.replace("SignUp")}>
           <Text style={{ color: "#fed130" }}> Sign Up</Text>
         </TouchableOpacity>
       </View>
