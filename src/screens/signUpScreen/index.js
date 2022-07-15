@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { auth } from "../../../firebase/index";
 import { authLogin } from "../../redux/actions/auth.actions";
-import { keyboardProps } from "react-native-web/dist/cjs/modules/forwardedProps";
+import { db } from "../../../firebase";
 
 export function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -33,9 +33,7 @@ export function SignUp({ navigation }) {
     );
   };
 
-
   const handleSignUp = () => {
-
     setLoading(true);
     Keyboard.dismiss();
     if (email === "" && password === "" && confirmPassword === "") {
@@ -48,9 +46,9 @@ export function SignUp({ navigation }) {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((userCredentials) => {
-          dispatch(authLogin(email, password))          
+          dispatch(authLogin(email, password));
           const user = userCredentials.user;
-          console.log(user.email);
+          console.log(user.name);
           navigation.replace("MainNavigation");
           signUpSuccessfulToast();
         })
@@ -60,6 +58,13 @@ export function SignUp({ navigation }) {
         });
     }
   };
+
+  // const createDocumentName = async (user) => {
+  //   const docRef = 
+  //   const userData = await docRef
+  //   console.log("Document creation successful");
+  // };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={"#26272b"} hidden={false} />
@@ -126,7 +131,11 @@ export function SignUp({ navigation }) {
           <icons.Feather name="lock" size={scale(20)} color="#fed130" />
         </TouchableOpacity>
       </View>
-      { loading ? <View style={{marginTop: 25, marginBottom: 5}}><BarIndicator color="#fed130"/></View> : null}
+      {loading ? (
+        <View style={{ marginTop: 25, marginBottom: 5 }}>
+          <BarIndicator color="#fed130" />
+        </View>
+      ) : null}
       <TouchableOpacity onPress={handleSignUp} style={styles.signUpButton1}>
         <Text>Sign Up</Text>
       </TouchableOpacity>

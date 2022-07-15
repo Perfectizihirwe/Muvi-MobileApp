@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { scale, verticalScale } from "react-native-size-matters";
 import { StyleSheet, View, Text, StatusBar, SafeAreaView } from "react-native";
-import { db } from "../../../firebase";
-import { get } from "react-native/Libraries/Utilities/PixelRatio";
+import {db} from "../../../firebase";
 
 export function AccountSettingsScreen({ navigation, props }) {
-  console.log("Account Settings Screen");
-  const getUserName = async() => {
-    const userDocument = await db.collection("users").doc("fnG9vqQHCksTAfW9Nx8K").get();
-    console.log(userDocument);
-  }
 
-  useEffect(() => {
-    getUserName();
-  },[])
-
+  
+  db.collection("users").doc("LA").set({
+    name: "Los Angeles",
+    state: "CA",
+    country: "USA"
+})
+.then(() => {
+    console.log("Document successfully written!");
+})
+.catch((error) => {
+    console.error("Error writing document: ", error);
+});
 
   return (
     <SafeAreaView style={styles.container}>

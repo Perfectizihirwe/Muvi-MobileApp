@@ -19,7 +19,7 @@ import { deleteSerieId } from "../../../redux/actions";
 import { fetchVideoRelated } from "../../../redux/actions";
 import { PopularComponent } from "../../../components/popular.movies";
 import { deleteVideoRelated } from "../../../redux/actions";
-
+import { db } from "../../../../firebase";
 import { Video } from "../../../components/video.player";
 
 export default function DetailScreen({ route, navigation }) {
@@ -36,21 +36,22 @@ export default function DetailScreen({ route, navigation }) {
 
   const [playing, setPlaying] = useState(false);
   const [youtubeKey, setYoutubeKey] = useState([]);
-
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchVideoId(id));
     dispatch(fetchSerieId(id));
     dispatch(fetchVideoRelated(id));
+  getUserName();
   }, []);
-
+  
   const { video_id, error } = useSelector((state) => state.VideoId);
   const { serie_id } = useSelector((state) => state.SeriesVideo);
   const { video_related } = useSelector((state) => state.Related);
 
   console.log(id);
-
+  
   const youtubeSerieKey = serie_id?.filter((serie) =>
     serie.name.includes("Trailer")
   );
@@ -70,6 +71,14 @@ export default function DetailScreen({ route, navigation }) {
     dispatch(deleteVideoRelated());
     navigation.goBack();
   }
+  
+  console.log("Account Settings Screen");
+  const getUserName = async () => {
+    const docRef = db.collection("users").doc("fnG9vqQHCksTAfW9Nx8K");
+    const userData = await docRef.get();
+    console.log(userData.data());
+  };
+
 
   return (
     <ScrollView>
@@ -261,7 +270,7 @@ export default function DetailScreen({ route, navigation }) {
                 popImage={related.backdrop_path}
                 popDetails={related.overview}
                 navigation={() => {
-                  navigation.push("DetailScreen", related);                  
+                  navigation.push("DetailScreen", related);
                 }}
               />
             );
@@ -271,7 +280,6 @@ export default function DetailScreen({ route, navigation }) {
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
